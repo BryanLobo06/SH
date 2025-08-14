@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Loader - Sistema de ExpertSoft</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CSV Loader</h1>
+            <p>Carga archivos CSV a la base de datos del sistema de expertSoft</p>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h2>📁 Archivos CSV Disponibles</h2>
+                
+                <div id="files-container" class="files-grid">
+                    <!-- Los archivos se cargarán aquí dinámicamente -->
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn btn-load-all" onclick="loadAllFiles()">
+                        🚀 Cargar Todos los Archivos CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Procesando archivos CSV...</p>
+            </div>
+
+            <div class="results-section" id="results-section">
+                <h2>📋 Resultados de Carga</h2>
+                <div id="results-container">
+                    <!-- Los resultados se mostrarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
