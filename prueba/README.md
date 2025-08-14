@@ -21,7 +21,7 @@ Un sistema completo de gestión de expertSoft con funcionalidades CRUD y carga m
 
 1. **Clonar el repositorio**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/BryanLobo06/SH.git
    cd prueba
    ```
 
@@ -31,10 +31,7 @@ Un sistema completo de gestión de expertSoft con funcionalidades CRUD y carga m
    ```
 
 3. **Configurar base de datos**
-   - Crear la base de datos ejecutando el script SQL:
-   ```bash
-   mysql -u tu_usuario -p < docs/expertSoft.sql
-   ```
+   - Crear la base de datos ejecutando el script SQL
 
 4. **Configurar variables de entorno**
    - Crear archivo `.env` con:
@@ -144,4 +141,5 @@ prueba/
 - **Base de Datos**: MySQL2
 - **Frontend**: HTML, CSS, JavaScript, Vite
 - **Utilidades**: CSV-Parser, CORS, dotenv
+
 
