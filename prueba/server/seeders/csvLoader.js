@@ -108,7 +108,7 @@ const CSV_MAPPINGS = {
             'id_transaction': 'id_transaction',
             'date_and_time': 'date_and_time',
             'amount': 'amount',
-            'transaction_type': 'transaction_type'
+            'transaction_type ': 'transaction_type'
         }
     },
     'invoiced.csv': {
@@ -133,18 +133,22 @@ const CSV_MAPPINGS = {
 
 // Función principal para cargar todos los archivos CSV
 export async function loadAllCSVFiles() {
-    const results = [];
+    const results = {};
     
     for (const [filename, config] of Object.entries(CSV_MAPPINGS)) {
         try {
             const result = await loadCSVFile(filename, config.tableName, config.columnMapping);
-            results.push(result);
+            results[filename] = {
+                success: true,
+                recordsInserted: result.recordsProcessed,
+                message: result.message
+            };
         } catch (error) {
-            results.push({
+            results[filename] = {
                 success: false,
-                filename,
-                error: error.message
-            });
+                error: error.message,
+                recordsInserted: 0
+            };
         }
     }
     
@@ -164,9 +168,12 @@ export async function loadSpecificCSV(filename) {
 
 // Función para obtener la lista de archivos CSV disponibles
 export function getAvailableCSVFiles() {
-    return Object.keys(CSV_MAPPINGS).map(filename => ({
-        filename,
-        tableName: CSV_MAPPINGS[filename].tableName,
-        exists: fs.existsSync(path.join(DATA_DIR, filename))
-    }));
+    return Object.keys(CSV_MAPPINGS).map(filename => {
+        const exists = fs.existsSync(path.join(DATA_DIR, filename));
+        return {
+            filename,
+            tableName: CSV_MAPPINGS[filename].tableName,
+            exists
+        };
+    }).filter(file => file.exists).map(file => file.filename);
 }

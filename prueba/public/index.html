@@ -3,43 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Loader - Sistema de ExpertSoft</title>
+    <title>Dashboard - Sistema ExpertSoft</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 CSV Loader</h1>
-            <p>Carga archivos CSV a la base de datos del sistema de expertSoft</p>
-        </div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="sidebar-header">
+                <h2><i class="fas fa-book"></i> ExpertSoft</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#clients" class="nav-link" data-section="clients"><i class="fas fa-users"></i> Clientes</a></li>
+                <li><a href="#transactions" class="nav-link" data-section="transactions"><i class="fas fa-exchange-alt"></i> Transacciones</a></li>
+                <li><a href="#invoices" class="nav-link" data-section="invoices"><i class="fas fa-file-invoice"></i> Facturas</a></li>
+                <li><a href="#states" class="nav-link" data-section="states"><i class="fas fa-flag"></i> Estados</a></li>
+                <li><a href="#bulk-upload" class="nav-link" data-section="bulk-upload"><i class="fas fa-upload"></i> Carga Masiva</a></li>
+            </ul>
+        </aside>
 
-        <div class="main-content">
-            <div class="section">
-                <h2>📁 Archivos CSV Disponibles</h2>
-                
-                <div id="files-container" class="files-grid">
-                    <!-- Los archivos se cargarán aquí dinámicamente -->
-                </div>
-
-                <div style="text-align: center;">
-                    <button class="btn btn-load-all" onclick="loadAllFiles()">
-                        🚀 Cargar Todos los Archivos CSV
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 id="page-title">Dashboard Principal</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="add-new-btn" style="display: none;">
+                        <i class="fas fa-plus"></i> Agregar Nuevo
                     </button>
                 </div>
-            </div>
+            </header>
 
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Procesando archivos CSV...</p>
-            </div>
-
-            <div class="results-section" id="results-section">
-                <h2>📋 Resultados de Carga</h2>
-                <div id="results-container">
-                    <!-- Los resultados se mostrarán aquí -->
+            <!-- Home Section -->
+            <section id="home-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon clients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-clients">0</h3>
+                            <p>Total Clientes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon transactions">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-transactions">0</h3>
+                            <p>Total Transacciones</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon invoices">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-invoices">0</h3>
+                            <p>Total Facturas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon states">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-states">0</h3>
+                            <p>Total Estados</p>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="quick-actions">
+                    <h3>Acciones Rápidas</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('clients')">
+                            <i class="fas fa-users"></i>
+                            <span>Gestionar Clientes</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('bulk-upload')">
+                            <i class="fas fa-upload"></i>
+                            <span>Carga Masiva CSV</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('transactions')">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Ver Transacciones</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('invoices')">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Gestionar Facturas</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients-section" class="content-section">
+                <div class="table-container">
+                    <div class="table-header">
+                        <input type="text" id="clients-search" placeholder="Buscar clientes..." class="search-input">
+                        <button class="btn btn-primary" onclick="addClient()">
+                            <i class="fas fa-plus"></i> Nuevo Cliente
+                        </button>
+                    </div>
+                    <div id="clients-list" class="data-list">
+                        <!-- Clients will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions-section" class="content-section">
+                <div class="table-container">
+                    <div class="table-header">
+                        <input type="text" id="transactions-search" placeholder="Buscar transacciones..." class="search-input">
+                        <button class="btn btn-primary" onclick="addTransaction()">
+                            <i class="fas fa-plus"></i> Nueva Transacción
+                        </button>
+                    </div>
+                    <div id="transactions-list" class="data-list">
+                        <!-- Transactions will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Invoices Section -->
+            <section id="invoices-section" class="content-section">
+                <div class="table-container">
+                    <div class="table-header">
+                        <input type="text" id="invoices-search" placeholder="Buscar facturas..." class="search-input">
+                        <button class="btn btn-primary" onclick="addInvoice()">
+                            <i class="fas fa-plus"></i> Nueva Factura
+                        </button>
+                    </div>
+                    <div id="invoices-list" class="data-list">
+                        <!-- Invoices will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- States Section -->
+            <section id="states-section" class="content-section">
+                <div class="table-container">
+                    <div class="table-header">
+                        <input type="text" id="states-search" placeholder="Buscar estados..." class="search-input">
+                        <button class="btn btn-primary" onclick="addState()">
+                            <i class="fas fa-plus"></i> Nuevo Estado
+                        </button>
+                    </div>
+                    <div id="states-list" class="data-list">
+                        <!-- States will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bulk Upload Section -->
+            <section id="bulk-upload-section" class="content-section">
+                <div class="upload-container">
+                    <h3>Carga Masiva de Archivos CSV</h3>
+                    
+                    <div class="files-grid" id="csv-files-grid">
+                        <!-- CSV files will be loaded here -->
+                    </div>
+
+                    <div class="upload-actions">
+                        <button class="btn btn-success btn-lg" onclick="loadAllCSVFiles()">
+                            <i class="fas fa-upload"></i> Cargar Todos los Archivos
+                        </button>
+                    </div>
+
+                    <div id="results-section" class="results-section">
+                        <h3>Resultados de Carga</h3>
+                        <div id="results-container" class="results-container">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-container">
+        <!-- Client Modal -->
+        <div id="client-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Agregar Cliente</h3>
+                    <span class="close" onclick="closeModal('client-modal')">&times;</span>
+                </div>
+                <form id="client-form">
+                    <div class="form-group">
+                        <label for="client-name">Nombre:</label>
+                        <input type="text" id="client-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-identificacion">Identificación:</label>
+                        <input type="text" id="client-identificacion" name="identificacion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-email">Email:</label>
+                        <input type="email" id="client-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-phone">Teléfono:</label>
+                        <input type="text" id="client-phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-address">Dirección:</label>
+                        <textarea id="client-address" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('client-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <!-- Transaction Modal -->
+        <div id="transaction-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Agregar Transacción</h3>
+                    <span class="close" onclick="closeModal('transaction-modal')">&times;</span>
+                </div>
+                <form id="transaction-form">
+                    <div class="form-group">
+                        <label for="transaction-id">ID Transacción:</label>
+                        <input type="text" id="transaction-id" name="id_transaction" placeholder="Se generará automáticamente si se deja vacío">
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-type">Tipo de Transacción:</label>
+                        <select id="transaction-type" name="transaction_type" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="Depósito">Depósito</option>
+                            <option value="Retiro">Retiro</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Pago">Pago</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-date">Fecha y Hora:</label>
+                        <input type="datetime-local" id="transaction-date" name="transaction_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-client-id">Cliente ID:</label>
+                        <input type="number" id="transaction-client-id" name="client_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-amount">Monto:</label>
+                        <input type="number" id="transaction-amount" name="amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('transaction-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Invoice Modal -->
+        <div id="invoice-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Agregar Factura</h3>
+                    <span class="close" onclick="closeModal('invoice-modal')">&times;</span>
+                </div>
+                <form id="invoice-form">
+                    <div class="form-group">
+                        <label for="invoice-number">Número de Factura:</label>
+                        <input type="text" id="invoice-number" name="invoice_number" placeholder="Se generará automáticamente si se deja vacío">
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-platform">Plataforma:</label>
+                        <input type="text" id="invoice-platform" name="platform" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-period">Período de Facturación:</label>
+                        <input type="text" id="invoice-period" name="billing_period" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-amount">Monto Facturado:</label>
+                        <input type="number" id="invoice-amount" name="invoiced_amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-paid">Monto Pagado:</label>
+                        <input type="number" id="invoice-paid" name="amount_paid" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-client-id">Cliente ID (Identificación):</label>
+                        <input type="text" id="invoice-client-id" name="client_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoice-transaction-id">ID Transacción:</label>
+                        <input type="text" id="invoice-transaction-id" name="id_transaction">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('invoice-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- State Modal -->
+        <div id="state-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Agregar Estado</h3>
+                    <span class="close" onclick="closeModal('state-modal')">&times;</span>
+                </div>
+                <form id="state-form">
+                    <div class="form-group">
+                        <label for="state-transaction-id">Transacción ID:</label>
+                        <input type="number" id="state-transaction-id" name="transaction_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state-state">Estado:</label>
+                        <select id="state-state" name="state" required>
+                            <option value="">Seleccionar estado</option>
+                            <option value="pending">Pendiente</option>
+                            <option value="processing">Procesando</option>
+                            <option value="completed">Completado</option>
+                            <option value="failed">Fallido</option>
+                            <option value="cancelled">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="state-date">Fecha del Estado:</label>
+                        <input type="date" id="state-date" name="state_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state-comments">Comentarios:</label>
+                        <textarea id="state-comments" name="comments" rows="3" placeholder="Comentarios opcionales"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('state-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Loading element for compatibility -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
     </div>
 
     <script src="script.js"></script>

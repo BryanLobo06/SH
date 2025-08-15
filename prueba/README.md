@@ -1,15 +1,16 @@
-# Sistema de Gestión de expertSoft
+# Sistema de Gestión ExpertSoft
 
-Un sistema completo de gestión de expertSoft con funcionalidades CRUD y carga masiva de datos CSV. Desarrollado con Node.js, Express, MySQL y Vite.
+Un sistema completo de gestión empresarial con funcionalidades CRUD para clientes, transacciones y facturas. Desarrollado con Node.js, Express, MySQL y interfaz web moderna.
 
 ## 🚀 Características
 
-- **Sistema CRUD completo** para gestión de préstamos
+- **Sistema CRUD completo** para gestión de clientes, transacciones y facturas
 - **Carga masiva de datos** desde archivos CSV
 - **API RESTful** con endpoints documentados
 - **Base de datos MySQL** con esquema optimizado
-- **Interfaz web moderna** con Vite
-- **Consultas especializadas** para reportes
+- **Interfaz web moderna** con JavaScript vanilla
+- **Dashboard interactivo** con navegación por pestañas
+- **Validación de datos** y manejo de errores
 
 ## 📋 Prerrequisitos
 
@@ -21,7 +22,7 @@ Un sistema completo de gestión de expertSoft con funcionalidades CRUD y carga m
 
 1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/BryanLobo06/SH.git
+   git clone <url-del-repositorio>
    cd prueba
    ```
 
@@ -55,62 +56,96 @@ Un sistema completo de gestión de expertSoft con funcionalidades CRUD y carga m
 node index.js
 ```
 
-
 El servidor estará disponible en: `http://localhost:3000`
 
-## 🌐 Interfaces Web
+## 🌐 Interfaz Web
 
-- **CSV Loader**: `http://localhost:3000/` - Interfaz para carga masiva de datos
-- **Dashboard CRUD**: `http://localhost:3000/dashboard` - Panel de administración
+- **Dashboard Principal**: `http://localhost:3000/` - Sistema completo de gestión con:
+  - **Clientes**: Gestión CRUD de información de clientes
+  - **Transacciones**: Registro y seguimiento de transacciones
+  - **Facturas**: Administración de facturación
+  - **Carga CSV**: Importación masiva de datos
 
 ## 📡 API Endpoints
 
-### Gestión de Préstamos (CRUD)
+### Gestión de Clientes
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `GET` | `/client` | Listar todos los préstamos |
-| `GET` | `/client/:identificacion` | Obtener préstamo específico |
-| `POST` | `/client` | Crear nuevo préstamo |
-| `PUT` | `/client/:identificacion_client` | Actualizar préstamo |
-| `DELETE` | `/client/:identificacion_client` | Eliminar préstamo |
+| `GET` | `/api/clients` | Listar todos los clientes |
+| `GET` | `/api/clients/:id` | Obtener cliente específico |
+| `POST` | `/api/clients` | Crear nuevo cliente |
+| `PUT` | `/api/clients/:id` | Actualizar cliente |
+| `DELETE` | `/api/clients/:id` | Eliminar cliente |
 
-### Consultas Especializadas
+### Gestión de Transacciones
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `GET` | `/client/usuario/:identificacion` | Préstamos de un usuario específico |
-| `GET` | `/invoiced/mas-invoiced` | Top 5 libros más prestados |
-| `GET` | `/transaction/con-retrasos` | Usuarios con préstamos retrasados |
-| `GET` | `/client/activos` | Préstamos activos |
-| `GET` | `/client/historial/:isbn` | Historial de un libro por ISBN |
+| `GET` | `/api/transactions` | Listar todas las transacciones |
+| `GET` | `/api/transactions/:id` | Obtener transacción específica |
+| `POST` | `/api/transactions` | Crear nueva transacción |
+| `PUT` | `/api/transactions/:id` | Actualizar transacción |
+| `DELETE` | `/api/transactions/:id` | Eliminar transacción |
+
+### Gestión de Facturas
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/api/invoices` | Listar todas las facturas |
+| `GET` | `/api/invoices/:id` | Obtener factura específica |
+| `POST` | `/api/invoices` | Crear nueva factura |
+| `PUT` | `/api/invoices/:id` | Actualizar factura |
+| `DELETE` | `/api/invoices/:id` | Eliminar factura |
 
 ### Carga de CSV
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `GET` | `/csv/available` | Archivos CSV disponibles |
-| `POST` | `/csv/load-all` | Cargar todos los CSV |
-| `POST` | `/csv/load/:filename` | Cargar CSV específico |
+| `GET` | `/api/csv/available` | Archivos CSV disponibles |
+| `POST` | `/api/csv/load-all` | Cargar todos los CSV |
+| `POST` | `/api/csv/load/:filename` | Cargar CSV específico |
 
 ## 📊 Estructura de Base de Datos
 
 ### Tablas Principales
 
-- **clients**: Información de clientes
-- **transactions**: Registro de transacciones
-- **invoices**: Facturas del sistema
-- **transaction_states**: Estados de transacciones
+- **clients**: Información de clientes del sistema
+- **transactions**: Registro de transacciones comerciales
+- **invoices**: Facturas y información de facturación
+- **states**: Estados y configuraciones del sistema
 
-### Ejemplo de Datos para Préstamos
+### Ejemplo de Datos
 
+#### Cliente
 ```json
 {
-  "identificacion_usuario": "12345678",
-  "isbn": "978-0123456789",
-  "fecha_client": "2024-01-15",
-  "fecha_devolucion": "2024-02-15",
-  "estado": "activo"
+  "id_client": "CLI001",
+  "name": "Juan Pérez",
+  "email": "juan@email.com",
+  "phone": "123456789",
+  "address": "Calle 123"
+}
+```
+
+#### Transacción
+```json
+{
+  "id_transaction": "TXN001",
+  "transaction_type": "venta",
+  "date_and_time": "2024-01-15T10:30:00",
+  "amount": 150.00
+}
+```
+
+#### Factura
+```json
+{
+  "id_invoiced": "INV001",
+  "platform": "Web",
+  "billing_period": "2024-01",
+  "total_amount": 1500.00,
+  "status": "paid"
 }
 ```
 
@@ -119,27 +154,51 @@ El servidor estará disponible en: `http://localhost:3000`
 ```
 prueba/
 ├── docs/
-│   └── expertSoft.sql      # Esquema de base de datos
+│   ├── expertSoft.sql           # Esquema de base de datos
+│   └── Diagrama entidad-relacion.drawio.png
 ├── public/
-│   ├── index.html          # Interfaz CSV Loader
-│   ├── dashboard.html      # Dashboard CRUD
-│   ├── script.js           # Lógica frontend
-│   └── styles.css          # Estilos
+│   ├── index.html               # Interfaz principal
+│   ├── script.js                # Lógica frontend
+│   └── styles.css               # Estilos CSS
 ├── server/
-│   ├── conexiondb.js       # Configuración de BD
-│   ├── data/               # Archivos CSV
-│   └── seeders/            # Cargadores de datos
-├── index.js                # Servidor principal
-├── setup-database.js       # Inicializador de BD
-├── package.json            # Dependencias
-└── .env                    # Variables de entorno
+│   ├── conexiondb.js            # Configuración de BD
+│   ├── data/                    # Archivos CSV
+│   │   ├── client.csv
+│   │   ├── invoiced.csv
+│   │   ├── state.csv
+│   │   └── transaction.csv
+│   └── seeders/
+│       └── csvLoader.js         # Cargador de datos CSV
+├── index.js                     # Servidor principal
+├── setup-database.js            # Inicializador de BD
+├── package.json                 # Dependencias
+└── .env                         # Variables de entorno
 ```
 
 ## 🔧 Tecnologías Utilizadas
 
 - **Backend**: Node.js, Express.js
 - **Base de Datos**: MySQL2
-- **Frontend**: HTML, CSS, JavaScript, Vite
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
 - **Utilidades**: CSV-Parser, CORS, dotenv
 
+## 📝 Funcionalidades Principales
+
+### Dashboard Interactivo
+- **Navegación por pestañas**: Clientes, Transacciones, Facturas, CSV
+- **Formularios dinámicos**: Crear y editar registros
+- **Tablas responsivas**: Visualización de datos con acciones CRUD
+- **Alertas del sistema**: Notificaciones de éxito y error
+
+### Carga Masiva CSV
+- **Detección automática**: Archivos CSV disponibles
+- **Carga individual**: Por archivo específico
+- **Carga masiva**: Todos los archivos a la vez
+- **Validación de datos**: Verificación antes de insertar
+
+### API RESTful
+- **Endpoints consistentes**: Estructura uniforme
+- **Manejo de errores**: Respuestas HTTP apropiadas
+- **Validación de entrada**: Verificación de datos
+- **CORS habilitado**: Acceso desde diferentes dominios
 
